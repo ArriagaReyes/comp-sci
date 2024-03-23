@@ -23,20 +23,27 @@ void append(struct ListNode* head, int value) {
     current->next = createNode(value);
 }
 
-void prepend(struct ListNode* head, int value) {
-    struct ListNode* current = head;
-    struct ListNode* next = current->next;
+struct ListNode* prepend(struct ListNode* head, int value) {
+    struct ListNode* node = createNode(value);
 
-    current->next = createNode(value);
-    current->next->next = next;
+    node->next = head;
+    head = node;
+
+    return head;
 }
 
 void insert(struct ListNode* before, struct ListNode* after, int value) {
     struct ListNode* node = createNode(value);
-    struct ListNode* temp = after;
+    struct ListNode* temp;
 
-    before->next = node;
-    node->next = temp;
+    if(before != NULL && after != NULL) {
+        temp = after;
+
+        before->next = node;
+        node->next = temp;
+    } else if(after == NULL) {
+        before->next = node;
+    }
 }
 
 void printList(struct ListNode* head) {
