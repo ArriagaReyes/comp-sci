@@ -26,6 +26,21 @@ struct ListNode* createList(int array[], int size) {
     return head;
 }
 
+/*struct ListNode* mergeSort(struct ListNode* list1, struct ListNode* list2) {
+    struct ListNode* cursor1;
+    struct ListNode* cursor2;
+    struct ListNode* node;
+
+    while(cursor1 && cursor2) {
+        if(cursor->value < cursor2->value) {
+            node = createNode(cursor->value);
+        }
+
+        cursor1 = cursor1->next;
+        cursor2 = cursor2->next;
+    }
+}*/
+
 struct ListNode* insertionSort(int array[], int size) {
     struct ListNode* head = createNode(array[0]);
     struct ListNode* current;
