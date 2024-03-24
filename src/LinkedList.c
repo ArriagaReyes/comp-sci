@@ -14,22 +14,23 @@ struct ListNode* createNode(int value) {
     return node;
 }
 
-void append(struct ListNode* head, int value) {
-    struct ListNode* current = head;
-
-    while(current->next != NULL)
-        current = current->next;
-
-    current->next = createNode(value);
-}
-
-struct ListNode* prepend(struct ListNode* head, int value) {
+void append(struct LinkedList* list, int value) {
     struct ListNode* node = createNode(value);
 
-    node->next = head;
-    head = node;
+    if(list->head == NULL) {
+        list->head = node;
+        list->tail = node;
+    } else {
+        list->tail->next = node;
+        list->tail = node;
+    }
+}
 
-    return head;
+void prepend(struct LinkedList* list, int value) {
+    struct ListNode* node = createNode(value);
+
+    node->next = list->head;
+    list->head = node;
 }
 
 void insert(struct ListNode* before, struct ListNode* after, int value) {
@@ -46,7 +47,17 @@ void insert(struct ListNode* before, struct ListNode* after, int value) {
     }
 }
 
-void printList(struct ListNode* head) {
+void printList(struct LinkedList* list) {
+    struct ListNode* current = list->head;
+
+    printf("Printing list: \n");
+    while(current != NULL) {
+        printf("Value: %d\n", current->value);
+        current = current->next;
+    }
+}
+
+/*void printList(struct ListNode* head) {
     struct ListNode* current = head;
 
     printf("Printing list:\n");
@@ -54,4 +65,4 @@ void printList(struct ListNode* head) {
         printf("Value: %d\n", current->value);
         current = current->next;
     }
-}
+}*/
