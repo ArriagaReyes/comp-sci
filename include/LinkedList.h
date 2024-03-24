@@ -9,6 +9,8 @@ struct ListNode {
 };
 
 struct ListNode* createNode(int);
+struct LinkedList* createList(int[], int);
+struct ListNode* find(struct LinkedList*, int);
 void append(struct LinkedList*, int);
 void prepend(struct LinkedList*, int);
 void insert(struct ListNode*, struct ListNode*, int);

@@ -14,6 +14,36 @@ struct ListNode* createNode(int value) {
     return node;
 }
 
+struct LinkedList* createList(int array[], int size) {
+    struct LinkedList* list =
+        (struct LinkedList*) malloc(sizeof(struct LinkedList));
+    if(list == NULL)
+        return NULL;
+
+    int i = 0;
+    while(i < size) {
+        append(list, array[i]);
+        ++i;
+    }
+
+    return list;
+}
+
+struct ListNode* find(struct LinkedList* list, int value) {
+    if(list->head == NULL)
+        return NULL;
+
+    struct ListNode* current = list->head;
+
+    while(current->next != NULL) {
+        if(current->value == value)
+            return current;
+        current = current->next;
+    }
+
+    return NULL;
+}
+
 void append(struct LinkedList* list, int value) {
     struct ListNode* node = createNode(value);
 
