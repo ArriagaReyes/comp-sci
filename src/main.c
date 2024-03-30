@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/LinkedList.h"
+#include "../include/Queue.h"
 
 struct Array {
     int* list;
@@ -74,22 +76,76 @@ void mergeSort(struct Array** parent) {
     free(rightChild);
 }
 
+struct LinkedList* mergeLists(struct LinkedList* list1, struct LinkedList* list2) {
+    struct ListNode* item1;
+    struct ListNode* item2;
+
+    if(empty(list1) || empty(list2)) return NULL;
+
+    struct LinkedList* output = createList(NULL, 0);
+
+    item1 = dequeue(list1);
+    item2 = dequeue(list2);
+
+    while(item1 && item2) {
+        if(item1->value < item2->value) {
+            append(output, item1->value);
+            free(item1);
+            item1 = dequeue(list1);
+        } else {
+            append(output, item2->value);
+            free(item2);
+            item2 = dequeue(list2);
+        }
+    }
+
+    while(item1) {
+        append(output, item1->value);
+        free(item1);
+        item1 = dequeue(list1);
+    }
+
+    while(item2) {
+        append(output, item2->value);
+        free(item2);
+        item2 = dequeue(list2);
+    }
+
+    return output;
+}
+
+void freeList(struct LinkedList** listptr) {
+    struct LinkedList* list = (*listptr);
+    if(!list) return;
+    if(!list->head) return;
+    struct ListNode* current = dequeue(list);
+
+    while(current) {
+        current->next = NULL;
+        free(current);
+        current = dequeue(list);
+    }
+
+    (*listptr)->head = NULL;
+    (*listptr) = NULL;
+
+    free((*listptr));
+}
+
 int main() {
-    struct Array* items = (struct Array*) malloc(sizeof(struct Array));
-    items->length = 8;
-    items->list = (int*) malloc(items->length * sizeof(int));
+    int array1[9] = {1, 2, 3, 3, 4, 5, 7, 7, 9};
+    int array2[6] = {2, 4, 4, 6, 7, 10};
 
-    int list[8] = {9, 8, 7, 6, 5, 4, 3, 2};
+    struct LinkedList* list1 = createList(array1, 9);
+    struct LinkedList* list2 = createList(array2, 6);
 
-    for(int i = 0; i < items->length; i++)
-        items->list[i] = list[i];
+    struct LinkedList* list = mergeLists(list1, list2);
 
-    printArray(items);
-    mergeSort(&items);
-    printArray(items);
+    printList(list);
 
-    free(items->list);
-    free(items);
+    freeList(&list1);
+    freeList(&list2);
+    freeList(&list);
 
     return 0;
 }
