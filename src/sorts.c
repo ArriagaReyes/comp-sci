@@ -3,14 +3,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct ListNode* insertionSort(int array[], int size) {
-    struct ListNode* head = createNode(array[0]);
-    struct ListNode* current;
-    struct ListNode* next;
-    struct ListNode* temp;
+/*ListEntry* insertionSort(int array[], int size) {
+    struct LinkedList* list = linkedList_Create();
+    linkedList_Append(list, &array[0]);
+    ListEntry* current;
+    ListEntry* next;
+    ListEntry* temp;
 
     for(int i = 1; i < size; i++) {
-        current = head;
+        current = list->head;
         while(current != NULL) {
             if(current->next != NULL) {
                 if(array[i] > current->value && array[i] <= current->next->value) {
