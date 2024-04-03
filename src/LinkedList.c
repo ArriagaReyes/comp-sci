@@ -2,97 +2,95 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct ListNode* createNode(int value) {
-    struct ListNode* node =
-        (struct ListNode*) malloc(sizeof(struct ListNode));
-    if(node == NULL)
-        return NULL;
+ListEntry* listEntry_Create(void* value) {
+    ListEntry* entry = (ListEntry*) malloc(sizeof(ListEntry));
+    if(!entry) NULL;
 
-    node->next = NULL;
-    node->value = value;
+    entry->value = value;
+    entry->next = NULL;
 
-    return node;
+    return entry;
 }
 
-struct LinkedList* createList(int array[], int size) {
-    struct LinkedList* list =
-        (struct LinkedList*) malloc(sizeof(struct LinkedList));
-    if(list == NULL)
-        return NULL;
+void listEntry_Destroy(ListEntry* entry) {
+    printf("Destroying entry with value of %d\n", *(int*)entry->value);
+    free((void*)entry);
+}
 
-    int i = 0;
-    while(i < size) {
-        append(list, array[i]);
-        ++i;
-    }
+LinkedList* linkedList_Create() {
+    LinkedList* list = (LinkedList*) malloc(sizeof(LinkedList));
+    if(!list) return NULL;
+
+    list->head = NULL;
+    list->tail = NULL;
+    list->length = 0;
 
     return list;
 }
 
-struct ListNode* find(struct LinkedList* list, int value) {
-    if(list->head == NULL)
-        return NULL;
+void linkedList_Destroy(LinkedList* list) {
+    ListEntry* head = list->head;
+    ListEntry* temp;
 
-    struct ListNode* current = list->head;
-
-    while(current->next != NULL) {
-        if(current->value == value)
-            return current;
-        current = current->next;
+    while(head) {
+        temp = head;
+        head = head->next;
+        listEntry_Destroy(temp);
     }
 
-    return NULL;
+    printf("Destroying list\n");
+    free((void*)list);
 }
 
-void append(struct LinkedList* list, int value) {
-    struct ListNode* node = createNode(value);
+int linkedList_Empty(LinkedList* list) {
+    if(list->length == 0) return 0;
+
+    return 1;
+}
+
+void linkedList_Prepend(LinkedList* list, void* value) {
+    ListEntry* entry = listEntry_Create(value);
+    if(!entry) return;
+
+    if(list->head = NULL) {
+        list->head = entry;
+        list->tail = entry;
+    } else {
+        entry->next = list->head;
+        list->head = entry;
+    }
+
+    ++list->length;
+}
+
+void linkedList_Append(LinkedList* list, void* value) {
+    if(!list) return;
+
+    ListEntry* entry = listEntry_Create(value);
+    if(!entry) return;
 
     if(list->head == NULL) {
-        list->head = node;
-        list->tail = node;
+        list->head = entry;
+        list->tail = entry;
     } else {
-        list->tail->next = node;
-        list->tail = node;
+        list->tail->next = entry;
+        list->tail = entry;
     }
+
+    ++list->length;
 }
 
-void prepend(struct LinkedList* list, int value) {
-    struct ListNode* node = createNode(value);
-
-    node->next = list->head;
-    list->head = node;
-}
-
-void insert(struct ListNode* before, struct ListNode* after, int value) {
-    struct ListNode* node = createNode(value);
-    struct ListNode* temp;
-
-    if(before != NULL && after != NULL) {
-        temp = after;
-
-        before->next = node;
-        node->next = temp;
-    } else if(after == NULL) {
-        before->next = node;
-    }
-}
-
-void printList(struct LinkedList* list) {
-    struct ListNode* current = list->head;
-
-    printf("Printing list: \n");
-    while(current != NULL) {
-        printf("Value: %d\n", current->value);
-        current = current->next;
-    }
-}
-
-/*void printList(struct ListNode* head) {
-    struct ListNode* current = head;
+void linkedList_Print(LinkedList* list) {
+    ListEntry* current = list->head;
 
     printf("Printing list:\n");
-    while(current != NULL) {
-        printf("Value: %d\n", current->value);
+
+    printf("[ ");
+    while(current) {
+        if(current->next) printf("%d, ", *(int*)current->value);
+        else printf("%d ", *(int*)current->value);
         current = current->next;
     }
-}*/
+
+    printf("]\n");
+}
