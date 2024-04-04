@@ -27,10 +27,10 @@ void linkedList_Prepend(LinkedList*, void*);
 void linkedList_Append(LinkedList*, void*);
 
 // Remove and return the end of the list
-//ListEntry* linkedList_Pop(LinkedList*);
+void* linkedList_Pop(LinkedList*);
 
 // Remove and return the start of the list
-//ListEntry* linkedList_Chop(LinkedList*);
+void* linkedList_Snap(LinkedList*);
 
 // Find and return the entry of the value
 //ListEntry* linkedList_Get(LinkedList*, void*);

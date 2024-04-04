@@ -80,6 +80,40 @@ void linkedList_Append(LinkedList* list, void* value) {
     ++list->length;
 }
 
+void* linkedList_Pop(LinkedList* list) {
+    if(!list->head) return NULL;
+
+    void* value;
+    ListEntry* current = list->head;
+
+    while(current->next != list->tail)
+        current = current->next;
+
+    list->tail = current;
+    value = current->next->value;
+
+    --list->length;
+    free(current->next);
+    current->next = NULL;
+
+    return value;
+}
+
+void* linkedList_Snap(LinkedList* list) {
+    if(!list->head) return NULL;
+
+    void* value = list->head->value;
+    ListEntry* oldHead = list->head;
+    list->head = oldHead->next;
+
+    --list->length;
+    free(oldHead);
+    oldHead->next = NULL;
+    oldHead = NULL;
+
+    return value;
+}
+
 void linkedList_Print(LinkedList* list) {
     ListEntry* current = list->head;
 
