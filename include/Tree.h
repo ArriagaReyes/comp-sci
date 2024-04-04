@@ -1,18 +1,17 @@
-struct TreeNode {
-    int value;
-    struct TreeNode* left;
-    struct TreeNode* right;
-};
+typedef struct BSTNode {
+    struct BSTNode* left;
+    struct BSTNode* right;
+    void* value;
+} BSTNode;
 
-struct Tree {
-    struct TreeNode* root;
-};
+typedef struct BST {
+    BSTNode* root;
+} BST;
 
-void insertIntoBST(struct TreeNode**, int);
-int nodesInTree(struct TreeNode*);
-void deleteTree(struct TreeNode**);
-int getMin(struct TreeNode*);
-int getMax(struct TreeNode*);
-void printInOrder(struct TreeNode*);
-struct TreeNode* createTreeNode(int);
-struct Tree* createTree(int[], int);
+BST* BST_Create();
+void BST_Destroy(BST**);
+void BST_Insert(BST*, void*);
+void BST_Print(BST*);
+int BST_Size(BST*);
+void* BST_Min(BST*);
+void* BST_Max(BST*);
