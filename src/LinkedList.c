@@ -114,6 +114,38 @@ void* linkedList_Snap(LinkedList* list) {
     return value;
 }
 
+ListEntry* linkedList_Get(LinkedList* list, void* value) {
+    if(!list->head) return NULL;
+
+    ListEntry* current = list->head;
+    while(current) {
+        if(*(int*)current->value == *(int*)value)
+            return current;
+        current = current->next;
+    }
+
+    return NULL;
+}
+
+void linkedList_Remove(LinkedList* list, void* value) {
+    if(!list->head) return;
+
+    ListEntry* current = list->head;
+    ListEntry* next = current->next;
+    while(current) {
+        if(*(int*)next->value == *(int*)value) {
+            current->next = next->next;
+            listEntry_Destroy(next);
+            --list->length;
+
+            return;
+        }
+
+        current = current->next;
+        next = current->next;
+    }
+}
+
 void linkedList_Print(LinkedList* list) {
     ListEntry* current = list->head;
 

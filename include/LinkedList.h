@@ -33,10 +33,10 @@ void* linkedList_Pop(LinkedList*);
 void* linkedList_Snap(LinkedList*);
 
 // Find and return the entry of the value
-//ListEntry* linkedList_Get(LinkedList*, void*);
+ListEntry* linkedList_Get(LinkedList*, void*);
 
 // Find and remove the entry of the value
-// void linkedList_Remove(LinkedList*, void*);
+void linkedList_Remove(LinkedList*, void*);
 
 // Print the list
 void linkedList_Print(LinkedList*);
