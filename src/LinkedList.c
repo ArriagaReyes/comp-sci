@@ -52,7 +52,7 @@ void linkedList_Prepend(LinkedList* list, void* value) {
     ListEntry* entry = listEntry_Create(value);
     if(!entry) return;
 
-    if(list->head = NULL) {
+    if(list->head == NULL) {
         list->head = entry;
         list->tail = entry;
     } else {

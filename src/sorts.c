@@ -137,7 +137,7 @@ struct LinkedList* mergeLists(struct LinkedList* list1, struct LinkedList* list2
     return output;
 }
 
-/*struct ListNode* mergeSort(struct ListNode* list1, struct ListNode* list2) {
+struct ListNode* mergeSort(struct ListNode* list1, struct ListNode* list2) {
     struct ListNode* cursor1;
     struct ListNode* cursor2;
     struct ListNode* node;
