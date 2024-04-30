@@ -17,9 +17,10 @@ Dict* dict_create();
 void dict_destroy(Dict**);
 
 void* dict_get(Dict* dict, char* key);
-int dict_insert(Dict*, char*, void*);
-int dict_remove(Dict* dict, char* key);
+void dict_insert(Dict*, char*, void*);
+void dict_remove(Dict* dict, char* key);
 
 // Make these static eventually
 //uint64_t hash_key(const char* key);
 //void resize(Dict* dict);
+//void item_insert(Item* list, );

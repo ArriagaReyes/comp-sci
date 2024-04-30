@@ -18,6 +18,52 @@ static uint64_t hash_key(const char* key) {
     return hash;
 }
 
+static void insert_item(Item* list, int capacity, char* key, void* value, int* size) {
+    uint64_t hash = hash_key(key);
+    int index = (int)(hash & ((uint64_t)capacity - 1));
+
+    while(list[index].key) {
+        if(list[index].key == key) {
+            list[index].value = value;
+            return;
+        }
+
+        printf("Collision between %s and %s\n", key, list[index].key);
+        index++;
+        if(index >= capacity) {
+            index = 0;
+        }
+    }
+
+    if(size) {
+        if(!key) return;
+        (*size)++;
+    }
+
+    list[index].key = key;
+    list[index].value = value;
+}
+
+void resize(Dict* dict) {
+    int new_capacity = dict->capacity * 2;
+    if(new_capacity < dict->capacity) return;
+
+    Item* new_items = calloc(dict->capacity, sizeof(Item));
+    if(!new_items) return;
+
+    Item item;
+    for(int i = 0; i < dict->capacity; i++) {
+        item = dict->items[i];
+        if(item.key) {
+            insert_item(dict->items, dict->capacity, item.key, item.value, NULL);
+        }
+    }
+
+    free(dict->items);
+    dict->items = new_items;
+    dict->capacity= new_capacity;
+}
+
 Dict* dict_create() {
    printf("Allocating memory for hashtable.\n");
     Dict* dict = (Dict*) malloc(sizeof(Dict));
@@ -42,90 +88,55 @@ Dict* dict_create() {
 }
 
 void dict_destroy(Dict** dict) {
-    Dict* temp = *dict;
+    printf("Deleting items from table\n");
+    free((*dict)->items);
+    (*dict)->items = NULL;
 
-    printf("Freeing hashtable from memory.\n");
-    free(temp->items);
-    temp->items = NULL;
-
+    printf("Deleting hashtable\n");
     free(*dict);
     (*dict) = NULL;
 }
 
-int dict_insert(Dict* dict, char* key, void* value) {
-    if(!dict) return -1;
+void dict_insert(Dict* dict, char* key, void* value) {
+    if(!dict) return;
 
-    int index = hash_key(key) % dict->capacity;
-    int collision = 1;
+    if(dict->size >= dict->capacity / 2)
+        resize(dict);
 
-    while(collision) {
-        if(!dict->items[index].key) {
-            dict->items[index].key = key;
-            dict->items[index].value = value;
-
-            collision = 0;
-        } else if(dict->items[index].key == key) {
-            dict->items[index].value = value;
-
-            collision = 0;
-        }
-
-        if(index == dict->capacity - 1)
-            index = 0;
-        else
-            index++;
-
-    }
-
-    return 0;
+    insert_item(dict->items, dict->capacity, key, value, &dict->size);
 }
 
 void* dict_get(Dict* dict, char* key) {
     if(!dict) return NULL;
+    uint64_t hash = hash_key(key);
+    int index = (int)(hash & ((uint64_t)dict->capacity - 1));
 
-    int index = hash_key(key) % dict->capacity;
-    int exit = 1;
-    int count = 0;
-
-    while(exit) {
+    while(dict->items[index].key) {
         if(dict->items[index].key == key)
             return dict->items[index].value;
 
-        if(index == dict->capacity - 1)
+        index++;
+        if(index >= dict->capacity)
             index = 0;
-        else
-            index++;
-
-        if(count == dict->capacity - 1)
-            return NULL;
-
-        count++;
     }
+
+    return NULL;
 }
 
-int dict_remove(Dict* dict, char* key) {
-    if(!dict) return -1;
+void dict_remove(Dict* dict, char* key) {
+    if(!dict) return;
+    uint64_t hash = hash_key(key);
+    int index = (int)(hash & ((uint64_t)dict->capacity - 1));
 
-    int index = hash_key(key) % dict->capacity;
-    int exit = 1;
-    int count = 0;
-
-    while(exit) {
+    while(dict->items[index].key) {
         if(dict->items[index].key == key) {
             dict->items[index].key = NULL;
             dict->items[index].value = NULL;
-
-            return 1;
+            return;
         }
 
-        if(index == dict->capacity - 1)
+        index++;
+        if(index >= dict->capacity)
             index = 0;
-        else
-            index++;
-
-        if(count == dict->capacity - 1)
-            return -1;
-
-        count++;
     }
 }
